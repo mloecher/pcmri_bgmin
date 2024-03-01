@@ -10,4 +10,4 @@ Contains acquisition and reconstruction code to generate the GIRFs used in this 
 
 - Waveforms/
 
-Contains example python code to use GrOpt to generate PC-MRI background minimizing waveforms with from a set of parameters and a measured GIRF
+Contains example python code to use GrOpt to generate PC-MRI background minimizing waveforms from a set of parameters and a measured GIRF.
