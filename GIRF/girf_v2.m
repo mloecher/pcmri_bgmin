@@ -1,13 +1,9 @@
 %%
 clear all
 clc
-addpath('../../matlab/')
-% addpath('D:\Dropbox\projects\matlab\pulseq\matlab\seq_girf\slice_select')
-addpath('C:\Users\mloecher\Dropbox\projects\matlab\pulseq\matlab\seq_girf\slice_select')
 
-% addpath('../../../bloch/')
-% addpath('../../../girf_stuff/waveforms/')
-% addpath('../seq_girf/slice_select/')
+% Addpath to pulseq if needed
+% addpath('D:\Dropbox\projects\matlab2\pulseq142\matlab')
 
 %%
 
@@ -17,12 +13,11 @@ lims = mr.opts('MaxGrad', 32, 'GradUnit', 'mT/m', ...
                'rfRingdownTime', 20e-6, 'rfDeadTime', 100e-6, ...
                  'adcDeadTime', 40e-6);
              
-
 TR = 1000e-3;
 
 dt_adc = 8e-6;
 N_adc = 8000;
-t_adc_dur = N_adc*dt_adc;  % This is just now for reference, make sure it has no decimal I think? 
+t_adc_dur = N_adc*dt_adc;  % This is just now for reference, not used with Skope obviously
 adc = mr.makeAdc(N_adc, 'Duration', t_adc_dur, 'system', lims);
 
 % Skope trigger
@@ -38,6 +33,7 @@ all_type = {'blip', 'biblip', 'chirp', 'rand'};
 
 seq=mr.Sequence(lims);
 
+% Sync pulses for Skope calibration
 N_sync = 20;
 [g_blip, g_blip_re] = get_test_wave('blip', 0, lims, 150, 1);
 g_blip.delay = 100e-6;
@@ -50,13 +46,13 @@ end
 seq.addBlock(mr.makeDelay(3.0));
 
 
-for i_type = 1:numel(all_type)
+for i_type = 1:numel(all_type)  % Loop through test waveform shape types
     type = all_type{i_type};
-for polarity = [-1, 1]
-for idx = 0:8
+for polarity = [-1, 1]  % Waveform polarity
+for idx = 0:8  % Run through different shape variations (i.e. blip size, chirp offset ...)
     [g_blip, g_blip_re] = get_test_wave(type, idx, lims, 150, polarity);
     g_blip.delay = 100e-6;
-for i_dir = 1:3 
+for i_dir = 1:3  % Play on each gradient axis
     g_blip.channel = dirs(i_dir);
     
     seq.addBlock(mr_trig, mr.makeDelay(t_trigger));
@@ -81,38 +77,9 @@ else
 end
 
 %%
-[grad_waveforms, t_rf, t_adc] = seq.gradient_waveforms_mwl();
-
-%%
-%-------  Get TR start times and the peak rf times (excitation)
-ts_rf = cell2mat(t_rf).';
-ts_adc = cell2mat(t_adc.');
-
-start_idx = round(squeeze(ts_adc(:,1) - t_trigger)/lims.gradRasterTime);
-
-fprintf('N per TR = %d \n', size(grad_waveforms, 2)/size(ts_rf,1));
-fprintf('start_idx(1:10) =  %d  %d  %d  %d  %d  %d  %d  %d  %d  %d \n', start_idx(1:10))
-fprintf('Scan time = %.2f min\n',size(grad_waveforms, 2)*lims.gradRasterTime/60);
-
-
-%%
-
-figure; hold on;
-i_tr = 220;
-plot(grad_waveforms(1,start_idx(i_tr)+1:start_idx(i_tr+2)), 'LineWidth', 2)
-plot(grad_waveforms(2,start_idx(i_tr)+1:start_idx(i_tr+2)), 'LineWidth', 2)
-plot(grad_waveforms(3,start_idx(i_tr)+1:start_idx(i_tr+2)), 'LineWidth', 2)
-
-%%
 
 seq.setDefinition('FOV', [100e-3 100e-3 100e-3]);
 seq_name = sprintf('girf_skope2');
 seq.setDefinition('Name', seq_name);
 
 seq.write([seq_name '.seq'])       % Write to pulseq file
-
-%%
-
-%%
-
-load('../../../girf_stuff/waveforms/wave_save_v2.mat')
