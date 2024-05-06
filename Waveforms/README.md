@@ -1,3 +1,10 @@
+### Installation
+
+Matlab scripts needs Pulseq to be in your path.
+
+
+
+
 ### Files
 
 - `simple_waves.ipynb` is a Python notebook that was used to generate all the waveforms used in the sliding TE experiments.  It generates waveforms with different echo times (minimization window positions), as well as different slice orientations (by rotating the GIRF being used).  
