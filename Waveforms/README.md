@@ -2,6 +2,11 @@
 
 Matlab scripts needs Pulseq to be in your path.
 
+To run the python code, you must install Gropt.  Currently the optimization routine is in a test pip repository and can be installed by running:
+
+`pip install -U --extra-index-url https://test.pypi.org/simple/ gropt2`
+
+If you get an error with including the fftw library, you may need to add: `os.add_dll_directory('fftw-path')` or installing the `pyfftw` package also seems to work.
 
 
 

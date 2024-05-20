@@ -1,5 +1,3 @@
-import sys 
-sys.path.append('D:\\Dropbox\\dev\\gropt2_proj\\python\\')
 import gropt2
 
 import cv2
