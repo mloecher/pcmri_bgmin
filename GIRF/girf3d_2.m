@@ -8,7 +8,7 @@ clc
 %%
 
 % We make a separate sequence for 
-for fix_i_type = 1:5
+for fix_i_type = 1:4
 
 % set system limits
 lims = mr.opts('MaxGrad', 32, 'GradUnit', 'mT/m', ...

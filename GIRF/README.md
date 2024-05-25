@@ -20,7 +20,9 @@
 
 #### Data Files
 
-- `girf_skope2.seq` contains the exact Pulseq sequenced used to measure the GIRF in this work.
+- `girf_skope2.seq` contains the exact Pulseq sequences used to measure the GIRF in this work.
+
+- `girf3d2_XXXX.seq` contains the Pulseq sequences using the thinslice method, where XXXX are different possble test waveforms.
 
 - `girf_skope_waves.mat` This contains all the test gradient waveforms used for calculating the GIRF
 
